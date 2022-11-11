@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+   <TextView
+       android:textColor="?attr/colorOnPrimary"
+       android:textSize="20dp"
+       android:layout_marginTop="10dp"
+       android:layout_gravity="center"
+       android:text="Delete This Item Anyway?"
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"/>
+<LinearLayout
+    android:layout_gravity="center"
+    android:orientation="horizontal"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+
+    <Button
+        android:layout_marginStart="12dp"
+android:layout_marginEnd="12dp"
+        android:layout_gravity="center"
+        app:iconTint="@color/white"
+        android:textColor="@color/white"
+        android:id="@+id/Dialog_btn_cancele"
+        android:text="Cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+    <Button
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="12dp"
+        android:id="@+id/Dialog_btn_sure"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Sure! "
+        android:textColor="@color/white"
+        app:iconTint="@color/white" />
+</LinearLayout>
+</LinearLayout>
