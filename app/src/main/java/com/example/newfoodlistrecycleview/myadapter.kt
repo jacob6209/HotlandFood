@@ -9,6 +9,7 @@ import android.widget.RatingBar
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.newfoodlistrecycleview.room.Food
 
 class FoodAdapter(private val data: ArrayList<Food>, private val foodevents: FoodEvents) :
     RecyclerView.Adapter<FoodAdapter.FoodViewholder>() {
@@ -70,12 +71,12 @@ class FoodAdapter(private val data: ArrayList<Food>, private val foodevents: Foo
     }
 
 
-    fun removefood(oldfood:Food,oldpostion:Int)
+    fun removefood(oldfood: Food, oldpostion:Int)
     {
         data.remove(oldfood)
         notifyItemRemoved(oldpostion)
     }
-    fun updatefood(newfood:Food,pos: Int)
+    fun updatefood(newfood: Food, pos: Int)
     {
         data[pos]=newfood
         notifyItemChanged(pos)
@@ -90,8 +91,9 @@ class FoodAdapter(private val data: ArrayList<Food>, private val foodevents: Foo
     }
 
     interface FoodEvents {
-        fun onFoodClick(food: Food,position: Int)
-        fun OnFoodLongClick(food:Food,pos:Int)
+        fun onFoodClick(food: Food, position: Int)
+        fun OnFoodLongClick(food: Food, pos:Int)
+
     }
 
 }
