@@ -312,6 +312,7 @@ class MainActivity : AppCompatActivity(), FoodAdapter.FoodEvents {
                 val txtdistance = updateItemBinding.DialogDistance.text.toString()
 
                 val newupdatefood = Food(
+                    id=food.id,
                     txt_subject =txtfood ,
                     txt_price =txtprice,
                     txt_distance = txtdistance,
@@ -321,8 +322,10 @@ class MainActivity : AppCompatActivity(), FoodAdapter.FoodEvents {
                     rating=(1..5).random().toFloat()
 
                 )
-
+                //update data in recycleview
                 myadapter.updatefood(newupdatefood,pos)
+
+                //update data in database
                 foodDao.updateFood(newupdatefood)
 
                 dialog.dismiss()
