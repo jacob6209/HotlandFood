@@ -280,58 +280,61 @@ class MainActivity : AppCompatActivity(), FoodAdapter.FoodEvents {
     }
 
     override fun onFoodClick(food: Food, pos: Int) {
-//        val dialog = AlertDialog.Builder(this).create()
-//        val updateItemBinding = DialogUpdateItemBinding.inflate(layoutInflater)
-//        dialog.setView(updateItemBinding.root)
-//        dialog.show()
-//
-//
-//        updateItemBinding.DianlogFoodName.setText(food.txt_subject)
-//        updateItemBinding.DialogFoodCity.setText(food.txt_city)
-//        updateItemBinding.DialogPrice.setText(food.txt_price)
-//        updateItemBinding.DialogDistance.setText(food.txt_distance)
-//
-//
-//
-//        updateItemBinding.DialogBtnUpdateCancel.setOnClickListener {
-//            dialog.dismiss()
-//        }
-//
-//        updateItemBinding.DialogUpdateDone.setOnClickListener {
-//
-//
-//            if (
-//                updateItemBinding.DianlogFoodName.length() > 0 &&
-//                updateItemBinding.DialogFoodCity.length() > 0 &&
-//                updateItemBinding.DialogPrice.length() > 0 &&
-//                updateItemBinding.DialogDistance.length() > 0
-//            ) {
-//                val txtfood = updateItemBinding.DianlogFoodName.text.toString()
-//                val txtcityfood = updateItemBinding.DialogFoodCity.text.toString()
-//                val txtprice = updateItemBinding.DialogPrice.text.toString()
-//                val txtdistance = updateItemBinding.DialogDistance.text.toString()
-//
-//                val newupdatefood = Food(
-//                    txtfood,
-//                    txtprice,
-//                    txtdistance,
-//                    txtcityfood,
-//                    food.url_img,
-//                    food.number_of_rating,
-//                    food.rating
-//                )
-//
-//                myadapter.updatefood(newupdatefood,pos)
-//                dialog.dismiss()
-//                binding.RecyclerMain.scrollToPosition(0)
-//
-//
-//            } else {
-//                Toast.makeText(this, "لطفا مقادیر را وارد نمایید.", Toast.LENGTH_SHORT).show()
-//            }
-//
-//
-//        }
+        val dialog = AlertDialog.Builder(this).create()
+        val updateItemBinding = DialogUpdateItemBinding.inflate(layoutInflater)
+        dialog.setView(updateItemBinding.root)
+        dialog.show()
+
+
+        updateItemBinding.DianlogFoodName.setText(food.txt_subject)
+        updateItemBinding.DialogFoodCity.setText(food.txt_city)
+        updateItemBinding.DialogPrice.setText(food.txt_price)
+        updateItemBinding.DialogDistance.setText(food.txt_distance)
+
+
+
+        updateItemBinding.DialogBtnUpdateCancel.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        updateItemBinding.DialogUpdateDone.setOnClickListener {
+
+
+            if (
+                updateItemBinding.DianlogFoodName.length() > 0 &&
+                updateItemBinding.DialogFoodCity.length() > 0 &&
+                updateItemBinding.DialogPrice.length() > 0 &&
+                updateItemBinding.DialogDistance.length() > 0
+            ) {
+                val txtfood = updateItemBinding.DianlogFoodName.text.toString()
+                val txtcityfood = updateItemBinding.DialogFoodCity.text.toString()
+                val txtprice = updateItemBinding.DialogPrice.text.toString()
+                val txtdistance = updateItemBinding.DialogDistance.text.toString()
+
+                val newupdatefood = Food(
+                    txt_subject =txtfood ,
+                    txt_price =txtprice,
+                    txt_distance = txtdistance,
+                    txt_city = txtcityfood,
+                    url_img= BASE_URL_IMG+(1..12).random().toString()+".jpg",
+                    number_of_rating=(1..200).random(),
+                    rating=(1..5).random().toFloat()
+
+                )
+
+                myadapter.updatefood(newupdatefood,pos)
+                foodDao.updateFood(newupdatefood)
+
+                dialog.dismiss()
+                binding.RecyclerMain.scrollToPosition(0)
+
+
+            } else {
+                Toast.makeText(this, "لطفا مقادیر را وارد نمایید.", Toast.LENGTH_SHORT).show()
+            }
+
+
+        }
 
 
     }
