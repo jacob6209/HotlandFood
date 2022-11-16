@@ -10,6 +10,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import cn.pedant.SweetAlert.SweetAlertDialog
 import com.example.newfoodlistrecycleview.databinding.ActivityMainBinding
 import com.example.newfoodlistrecycleview.databinding.DialogAddNewItemBinding
 import com.example.newfoodlistrecycleview.databinding.DialogDeleteItemBinding
@@ -18,6 +19,7 @@ import com.example.newfoodlistrecycleview.room.Food
 import com.example.newfoodlistrecycleview.room.FoodDao
 import com.example.newfoodlistrecycleview.room.MyDatabase
 
+const val BASE_URL_IMG="https://dunijet.ir/YaghootAndroidFiles/DuniFoodSimple/food"
 class MainActivity : AppCompatActivity(), FoodAdapter.FoodEvents {
     private lateinit var binding: ActivityMainBinding
     lateinit var myadapter: FoodAdapter
@@ -36,6 +38,22 @@ class MainActivity : AppCompatActivity(), FoodAdapter.FoodEvents {
             sharepre.edit().putBoolean("first_Run", false).apply()
         }
         ShowAllData()
+
+        binding.btnDeleteAllFood.setOnClickListener {
+            val dialog = SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
+            dialog.titleText = "Warning!"
+            dialog.contentText="All Data will Remove!,Are you Sure?"
+            dialog.confirmText = "Sure"
+            dialog.cancelText = "Cancel"
+            dialog.show()
+           dialog.setConfirmClickListener {
+               dialog.dismiss()
+               removeAllData()
+           }
+            dialog.setCancelClickListener {
+                dialog.dismiss()
+            }
+        }
 
 
 //
@@ -56,51 +74,69 @@ class MainActivity : AppCompatActivity(), FoodAdapter.FoodEvents {
 //
 //
 //
-//        binding.btnAddNewFood.setOnClickListener {
-//
-//            val dialog =AlertDialog.Builder(this).create()
-//            val dialogbinding =DialogAddNewItemBinding.inflate(layoutInflater)
-//            dialog.setView(dialogbinding.root)
-//            dialog.setCancelable(true)
-//            dialog.show()
-//            dialogbinding.DialogBtnDone.setOnClickListener {
-//                if (
-//                    dialogbinding.DianlogFoodName.length()>0&&
-//                    dialogbinding.DialogFoodCity.length()>0&&
-//                    dialogbinding.DialogPrice.length()>0&&
-//                    dialogbinding.DialogDistance.length()>0
-//                   )
-//                {
-//                    val txtfood=dialogbinding.DianlogFoodName.text.toString()
-//                    val txtcityfood=dialogbinding.DialogFoodCity.text.toString()
-//                    val txtprice=dialogbinding.DialogPrice.text.toString()
-//                    val txtdistance=dialogbinding.DialogDistance.text.toString()
-//
-//                    val txtratingbar:Int=(1..150).random()
-//                    val ratingnumber:Float=(1..5).random().toFloat()
-//
-//                    val randomimg=foodlist[(0 until 12).random()].url_img
-//
-//
-//                    val newfood= Food(txtfood,txtprice,txtdistance,txtcityfood,
-//                        randomimg,txtratingbar,ratingnumber)
-//
-//                      myadapter.AddFood(newfood)
-//                    dialog.dismiss()
-//                    binding.RecyclerMain.scrollToPosition(0)
-//
-//                }
-//                else
-//                {
-//                    Toast.makeText(this,"لطفا مقادیر را وارد نمایید.",Toast.LENGTH_SHORT).show()
-//                }
-//
-//
-//
-//            }
-//
-//
-//        }
+        binding.btnAddNewFood.setOnClickListener {
+
+            addnewfood()
+
+
+
+
+        }
+    }
+
+    private fun addnewfood() {
+        val dialog =AlertDialog.Builder(this).create()
+        val dialogbinding =DialogAddNewItemBinding.inflate(layoutInflater)
+        dialog.setView(dialogbinding.root)
+        dialog.setCancelable(true)
+        dialog.show()
+        dialogbinding.DialogBtnDone.setOnClickListener {
+            if (
+                dialogbinding.DianlogFoodName.length()>0&&
+                dialogbinding.DialogFoodCity.length()>0&&
+                dialogbinding.DialogPrice.length()>0&&
+                dialogbinding.DialogDistance.length()>0
+            )
+            {
+                val txtfood=dialogbinding.DianlogFoodName.text.toString()
+                val txtcityfood=dialogbinding.DialogFoodCity.text.toString()
+                val txtprice=dialogbinding.DialogPrice.text.toString()
+                val txtdistance=dialogbinding.DialogDistance.text.toString()
+
+                val txtratingbar:Int=(1..150).random()
+                val ratingnumber:Float=(1..5).random().toFloat()
+
+                val random_for_url=(1 until 12).random()
+                val url_pic= BASE_URL_IMG+random_for_url.toString()+".jpg"
+
+                val newfood= Food(
+                    txt_subject = txtfood,
+                    txt_price = txtprice,
+                    txt_distance = txtdistance,
+                    txt_city = txtcityfood,
+                    url_img = url_pic,
+                    number_of_rating = txtratingbar,
+                    rating = ratingnumber)
+
+                myadapter.AddFood(newfood)
+                foodDao.insertFood(newfood)
+                dialog.dismiss()
+                binding.RecyclerMain.scrollToPosition(0)
+
+            }
+            else
+            {
+                Toast.makeText(this,"لطفا مقادیر را وارد نمایید.",Toast.LENGTH_SHORT).show()
+            }
+
+
+
+        }
+    }
+
+    private fun removeAllData() {
+        foodDao.deleteAllFoods()
+        ShowAllData()
     }
 
     private fun ShowAllData() {
@@ -109,7 +145,7 @@ class MainActivity : AppCompatActivity(), FoodAdapter.FoodEvents {
         myadapter = FoodAdapter(ArrayList(fooddata), this)
         binding.RecyclerMain.adapter = myadapter
         binding.RecyclerMain.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
-        Log.v("testlog",fooddata.toString())
+        Log.v("testlog", fooddata.toString())
     }
 
     private fun firstRun() {
@@ -228,18 +264,19 @@ class MainActivity : AppCompatActivity(), FoodAdapter.FoodEvents {
     }
 
     override fun OnFoodLongClick(food: Food, pos: Int) {
-//        val dialog = AlertDialog.Builder(this).create()
-//        val dialogDeleteItemBinding = DialogDeleteItemBinding.inflate(layoutInflater)
-//        dialog.setView(dialogDeleteItemBinding.root)
-//        dialog.show()
-//
-//        dialogDeleteItemBinding.DialogBtnCancele.setOnClickListener {
-//            dialog.dismiss()
-//        }
-//        dialogDeleteItemBinding.DialogBtnSure.setOnClickListener {
-//            dialog.dismiss()
-//            myadapter.removefood(food, pos)
-//        }
+        val dialog = AlertDialog.Builder(this).create()
+        val dialogDeleteItemBinding = DialogDeleteItemBinding.inflate(layoutInflater)
+        dialog.setView(dialogDeleteItemBinding.root)
+        dialog.show()
+
+        dialogDeleteItemBinding.DialogBtnCancele.setOnClickListener {
+            dialog.dismiss()
+        }
+        dialogDeleteItemBinding.DialogBtnSure.setOnClickListener {
+            dialog.dismiss()
+            myadapter.removefood(food, pos)
+            foodDao.deleteFoods(food)
+        }
     }
 
     override fun onFoodClick(food: Food, pos: Int) {
