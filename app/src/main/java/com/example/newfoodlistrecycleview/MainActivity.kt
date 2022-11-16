@@ -119,7 +119,7 @@ class MainActivity : AppCompatActivity(), FoodAdapter.FoodEvents {
                     rating = ratingnumber)
 
                 myadapter.AddFood(newfood)
-                foodDao.insertFood(newfood)
+                foodDao.insertOrUpdateFood(newfood)
                 dialog.dismiss()
                 binding.RecyclerMain.scrollToPosition(0)
 
@@ -326,7 +326,7 @@ class MainActivity : AppCompatActivity(), FoodAdapter.FoodEvents {
                 myadapter.updatefood(newupdatefood,pos)
 
                 //update data in database
-                foodDao.updateFood(newupdatefood)
+                foodDao.insertOrUpdateFood(newupdatefood)
 
                 dialog.dismiss()
                 binding.RecyclerMain.scrollToPosition(0)
