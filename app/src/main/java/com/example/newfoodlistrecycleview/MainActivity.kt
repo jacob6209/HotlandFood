@@ -4,7 +4,9 @@ import android.content.Context
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.Editable
 import android.util.Log
+import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.widget.addTextChangedListener
@@ -57,19 +59,11 @@ class MainActivity : AppCompatActivity(), FoodAdapter.FoodEvents {
 
 
 //
-//        binding.edtSearch.addTextChangedListener { User_input ->
-//            if (User_input!!.isNotEmpty()){
-//                val clonelist=foodlist.clone() as ArrayList<Food>
-//               val filterlist =clonelist.filter { food ->
-//                   (food.txt_subject.contains(User_input))
-//               }
-//                myadapter.DataSet(ArrayList(filterlist))
-//        }
-//
-//            else {
-//                  myadapter.DataSet(foodlist.clone() as ArrayList<Food>)
-//            }
-//        }
+        binding.edtSearch.addTextChangedListener { editTextInput ->
+
+            searchOnDatabase(editTextInput)
+
+        }
 //
 //
 //
@@ -83,6 +77,20 @@ class MainActivity : AppCompatActivity(), FoodAdapter.FoodEvents {
 
         }
     }
+
+    private fun searchOnDatabase(editTextInput: Editable?) {
+        if (editTextInput!!.isNotEmpty()){
+           val SearchData=foodDao.searchFoods(editTextInput.toString())
+            myadapter.DataSet(ArrayList(SearchData))
+        }
+
+        else {
+            // show all data
+            val data=foodDao.getAllFoods()
+            myadapter.DataSet(ArrayList(data))
+        }
+    }
+
 
     private fun addnewfood() {
         val dialog =AlertDialog.Builder(this).create()
