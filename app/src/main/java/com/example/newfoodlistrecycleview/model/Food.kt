@@ -1,6 +1,5 @@
-package com.example.newfoodlistrecycleview.room
+package com.example.newfoodlistrecycleview.model
 
-import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 

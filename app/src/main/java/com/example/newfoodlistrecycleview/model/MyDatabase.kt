@@ -1,7 +1,6 @@
-package com.example.newfoodlistrecycleview.room
+package com.example.newfoodlistrecycleview.model
 
 import android.content.Context
-import android.provider.ContactsContract.CommonDataKinds.Contactables
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase

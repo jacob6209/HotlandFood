@@ -9,7 +9,7 @@ import android.widget.RatingBar
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.newfoodlistrecycleview.room.Food
+import com.example.newfoodlistrecycleview.model.Food
 
 class FoodAdapter(private val data: ArrayList<Food>, private val foodevents: FoodEvents) :
     RecyclerView.Adapter<FoodAdapter.FoodViewholder>() {
@@ -42,7 +42,6 @@ class FoodAdapter(private val data: ArrayList<Food>, private val foodevents: Foo
                 foodevents.onFoodClick(data[adapterPosition],adapterPosition)
             }
             itemView.setOnLongClickListener {
-
                 foodevents.OnFoodLongClick(data[adapterPosition],adapterPosition)
                 true
             }

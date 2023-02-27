@@ -1,25 +1,24 @@
-package com.example.newfoodlistrecycleview
+package com.example.newfoodlistrecycleview.mainScreen
 
 import android.content.Context
-import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.util.Log
-import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import cn.pedant.SweetAlert.SweetAlertDialog
+import com.example.newfoodlistrecycleview.FoodAdapter
 import com.example.newfoodlistrecycleview.databinding.ActivityMainBinding
 import com.example.newfoodlistrecycleview.databinding.DialogAddNewItemBinding
 import com.example.newfoodlistrecycleview.databinding.DialogDeleteItemBinding
 import com.example.newfoodlistrecycleview.databinding.DialogUpdateItemBinding
-import com.example.newfoodlistrecycleview.room.Food
-import com.example.newfoodlistrecycleview.room.FoodDao
-import com.example.newfoodlistrecycleview.room.MyDatabase
+import com.example.newfoodlistrecycleview.model.Food
+import com.example.newfoodlistrecycleview.model.FoodDao
+import com.example.newfoodlistrecycleview.model.MyDatabase
 
 const val BASE_URL_IMG="https://dunijet.ir/YaghootAndroidFiles/DuniFoodSimple/food"
 class MainActivity : AppCompatActivity(), FoodAdapter.FoodEvents {
@@ -115,7 +114,7 @@ class MainActivity : AppCompatActivity(), FoodAdapter.FoodEvents {
                 val ratingnumber:Float=(1..5).random().toFloat()
 
                 val random_for_url=(1 until 12).random()
-                val url_pic= BASE_URL_IMG+random_for_url.toString()+".jpg"
+                val url_pic= BASE_URL_IMG +random_for_url.toString()+".jpg"
 
                 val newfood= Food(
                     txt_subject = txtfood,
@@ -325,7 +324,7 @@ class MainActivity : AppCompatActivity(), FoodAdapter.FoodEvents {
                     txt_price =txtprice,
                     txt_distance = txtdistance,
                     txt_city = txtcityfood,
-                    url_img= BASE_URL_IMG+(1..12).random().toString()+".jpg",
+                    url_img= BASE_URL_IMG +(1..12).random().toString()+".jpg",
                     number_of_rating=(1..200).random(),
                     rating=(1..5).random().toFloat()
 
