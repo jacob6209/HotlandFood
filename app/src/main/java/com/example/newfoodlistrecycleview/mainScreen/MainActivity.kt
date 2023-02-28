@@ -19,26 +19,31 @@ import com.example.newfoodlistrecycleview.databinding.DialogUpdateItemBinding
 import com.example.newfoodlistrecycleview.model.Food
 import com.example.newfoodlistrecycleview.model.FoodDao
 import com.example.newfoodlistrecycleview.model.MyDatabase
+import com.example.newfoodlistrecycleview.util.BASE_URL_IMG
+import com.example.newfoodlistrecycleview.util.ShowTost
 
-const val BASE_URL_IMG="https://dunijet.ir/YaghootAndroidFiles/DuniFoodSimple/food"
-class MainActivity : AppCompatActivity(), FoodAdapter.FoodEvents {
+
+class MainActivity : AppCompatActivity(), FoodAdapter.FoodEvents,MainScreenContract.View{
     private lateinit var binding: ActivityMainBinding
     lateinit var myadapter: FoodAdapter
+    lateinit var presenter: MainScreenContract.Presenter
     lateinit var foodlist: ArrayList<Food>
     lateinit var foodDao: FoodDao
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        presenter=MainScreenPresente(MyDatabase.getDatabase(this).foodDao)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         foodDao = MyDatabase.getDatabase(this).foodDao
         val sharepre = getSharedPreferences("hotlandfood", Context.MODE_PRIVATE)
         if (sharepre.getBoolean("first_Run", true)) {
-            firstRun()
+            presenter.firstRun()
+//            firstRun()
             sharepre.edit().putBoolean("first_Run", false).apply()
         }
-        ShowAllData()
+        presenter.onAttach(this)
+//        ShowAllData()
 
         binding.btnDeleteAllFood.setOnClickListener {
             val dialog = SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
@@ -49,7 +54,8 @@ class MainActivity : AppCompatActivity(), FoodAdapter.FoodEvents {
             dialog.show()
            dialog.setConfirmClickListener {
                dialog.dismiss()
-               removeAllData()
+               presenter.onDeleteAllClicked()
+//               removeAllData()
            }
             dialog.setCancelClickListener {
                 dialog.dismiss()
@@ -70,17 +76,14 @@ class MainActivity : AppCompatActivity(), FoodAdapter.FoodEvents {
         binding.btnAddNewFood.setOnClickListener {
 
             addnewfood()
-
-
-
-
         }
     }
 
     private fun searchOnDatabase(editTextInput: Editable?) {
         if (editTextInput!!.isNotEmpty()){
-           val SearchData=foodDao.searchFoods(editTextInput.toString())
-            myadapter.DataSet(ArrayList(SearchData))
+            presenter.onSearchFood(editTextInput.toString())
+//           val SearchData=foodDao.searchFoods(editTextInput.toString())
+//            myadapter.DataSet(ArrayList(SearchData))
         }
 
         else {
@@ -125,15 +128,17 @@ class MainActivity : AppCompatActivity(), FoodAdapter.FoodEvents {
                     number_of_rating = txtratingbar,
                     rating = ratingnumber)
 
-                myadapter.AddFood(newfood)
-                foodDao.insertOrUpdateFood(newfood)
+                presenter.onAddNewFoodClicked(newfood)
+//                myadapter.AddFood(newfood)
+//                foodDao.insertOrUpdateFood(newfood)
                 dialog.dismiss()
-                binding.RecyclerMain.scrollToPosition(0)
+//                binding.RecyclerMain.scrollToPosition(0)
 
             }
             else
             {
-                Toast.makeText(this,"لطفا مقادیر را وارد نمایید.",Toast.LENGTH_SHORT).show()
+                ShowTost("لطفا مقادیر را وارد نمایید")
+//                Toast.makeText(this,"لطفا مقادیر را وارد نمایید.",Toast.LENGTH_SHORT).show()
             }
 
 
@@ -281,8 +286,9 @@ class MainActivity : AppCompatActivity(), FoodAdapter.FoodEvents {
         }
         dialogDeleteItemBinding.DialogBtnSure.setOnClickListener {
             dialog.dismiss()
-            myadapter.removefood(food, pos)
-            foodDao.deleteFoods(food)
+            presenter.onDeleteFood(food,pos)
+//            myadapter.removefood(food, pos)
+//            foodDao.deleteFoods(food)
         }
     }
 
@@ -329,24 +335,58 @@ class MainActivity : AppCompatActivity(), FoodAdapter.FoodEvents {
                     rating=(1..5).random().toFloat()
 
                 )
-                //update data in recycleview
-                myadapter.updatefood(newupdatefood,pos)
+                //*update data in recycleview
+//                myadapter.updatefood(newupdatefood,pos)
+                presenter.onUpdateFood(newupdatefood,pos)
+
 
                 //update data in database
-                foodDao.insertOrUpdateFood(newupdatefood)
+//                foodDao.insertOrUpdateFood(newupdatefood)
 
                 dialog.dismiss()
                 binding.RecyclerMain.scrollToPosition(0)
 
 
             } else {
-                Toast.makeText(this, "لطفا مقادیر را وارد نمایید.", Toast.LENGTH_SHORT).show()
+                ShowTost("لطفا مقادیر را وارد نمایید.")
             }
 
 
         }
 
 
+    }
+
+    override fun showAllFood(data: List<Food>) {
+        myadapter=FoodAdapter(ArrayList(data),this)
+        binding.RecyclerMain.adapter=myadapter
+        binding.RecyclerMain.layoutManager=LinearLayoutManager(this,RecyclerView.VERTICAL,false)
+    }
+
+    override fun showRefreshFood(data: List<Food>) {
+    myadapter.DataSet(ArrayList(data))
+    }
+
+    override fun addNewFood(newFood: Food) {
+        myadapter.AddFood(newFood)
+
+    }
+
+    override fun updateFood(editFood: Food, pos: Int) {
+       myadapter.updatefood(editFood,pos)
+    }
+
+    override fun deleteAllFood() {
+        TODO("Not yet implemented")
+    }
+
+    override fun deleteFood(deleteFood: Food, pos: Int) {
+       myadapter.removefood(deleteFood,pos)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        presenter.onDetach()
     }
 
 
